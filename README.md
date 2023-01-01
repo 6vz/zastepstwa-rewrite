@@ -21,9 +21,9 @@ Prosta aplikacja do sprawdzania zastępstw w ZSCHiE
 - Kotlin & Android Studio ([developer.android.com](https://developer.android.com))
 
 ## Pobierz na swoje urządzenie
-- Google Playstore - *WKRÓTCE*
+- Google Playstore - *NAPRAWDE WKROTCE*
 - Appstore - *WKRÓTCE*
-- Releases - Znajdź z prawej strony Releases, i pobierz plik .apk
+- Releases - *NIEDOSTEPNE*
 
 ## Copyright
 - Stworzone przez Mateusza Baranowskiego (6vz)
