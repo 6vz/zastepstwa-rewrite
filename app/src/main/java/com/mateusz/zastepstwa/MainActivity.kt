@@ -1,10 +1,12 @@
 package com.mateusz.zastepstwa
 
+import android.content.res.Configuration
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatDelegate
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.snackbar.Snackbar
 import java.time.Instant
@@ -14,6 +16,22 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        val isDarkTheme = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_YES == Configuration.UI_MODE_NIGHT_YES
+        println("Now is dark theme: $isDarkTheme")
+        if (isDarkTheme) {
+            // create a new instance of alertbuilder
+            val builder = android.app.AlertDialog.Builder(this)
+            builder.setTitle("Hej! Zatrzymaj się na chwilę!")
+            builder.setMessage("Używasz trybu ciemnego który nie jest dokońca wspierany, rozważ wyłączenie trybu ciemnego, lub dodanie aplikacji do wyjątków")
+            builder.setPositiveButton("Zamknij") { dialog, which ->
+                // Do nothing
+            }
+            builder.show()
+        } else {
+            println("Dark theme is not enabled")
+        }
+
 
         val todayButton = findViewById<Button>(R.id.selectToday)
         val tomorrowButton = findViewById<Button>(R.id.selectTommorow)
@@ -40,13 +58,15 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+
+
         checkActivity()
 
         customButton.setOnClickListener() {
             val datePicker = MaterialDatePicker.Builder.datePicker()
-                    .setTitleText("Wybierz datę")
-                    .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
-                    .build()
+                .setTitleText("Wybierz datę")
+                .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
+                .build()
             datePicker.show(supportFragmentManager, "DATE_PICKER")
             datePicker.addOnPositiveButtonClickListener {
                 val start = datePicker.selection
@@ -58,11 +78,15 @@ class MainActivity : AppCompatActivity() {
                 if (date.dayOfWeek.value == 6 || date.dayOfWeek.value == 7) {
                     Snackbar.make(findViewById(R.id.root), "Wybrany dzień jest weekendem. Nie chodzisz do szkoły w weekend... Racja?", Snackbar.LENGTH_LONG).show()
                 } else {
-                    val intent = android.content.Intent(this, DisplayActivity::class.java)
-                    intent.putExtra("day", day)
-                    intent.putExtra("month", month)
-                    intent.putExtra("year",year)
+                    val url = "https://zastepstwa.zschie.pl/pliki/$day.$month.$year.pdf"
+                    // open that in default pdf viewer
+                    val intent = android.content.Intent(android.content.Intent.ACTION_VIEW)
+                    intent.setDataAndType(android.net.Uri.parse(url), "application/pdf")
+                    intent.flags = android.content.Intent.FLAG_ACTIVITY_NO_HISTORY
                     startActivity(intent)
+                    if (intent.resolveActivity(packageManager) == null) {
+                        Snackbar.make(findViewById(R.id.root), "Jeśli żądanie zostało odrzucone, oznacza to że na ten dzień serwer nie znalazł zastępstw", Snackbar.LENGTH_LONG).show()
+                    }
                 }
             }
         }
@@ -75,11 +99,15 @@ class MainActivity : AppCompatActivity() {
             if (today.dayOfWeek.value == 6 || today.dayOfWeek.value == 7) {
                 Snackbar.make(findViewById(R.id.root), "Dzisiaj jest weekend. Nie chodzisz do szkoły w weekend... Racja?", Snackbar.LENGTH_LONG).show()
             } else {
-                val intent = android.content.Intent(this, DisplayActivity::class.java)
-                intent.putExtra("day", day)
-                intent.putExtra("month", month)
-                intent.putExtra("year",year)
+                val url = "https://zastepstwa.zschie.pl/pliki/$day.$month.$year.pdf"
+                // open that in default pdf viewer
+                val intent = android.content.Intent(android.content.Intent.ACTION_VIEW)
+                intent.setDataAndType(android.net.Uri.parse(url), "application/pdf")
+                intent.flags = android.content.Intent.FLAG_ACTIVITY_NO_HISTORY
                 startActivity(intent)
+                if (intent.resolveActivity(packageManager) == null) {
+                    Snackbar.make(findViewById(R.id.root), "Jeśli żądanie zostało odrzucone, oznacza to że na ten dzień serwer nie znalazł zastępstw", Snackbar.LENGTH_LONG).show()
+                }
             }
         }
 
@@ -91,11 +119,15 @@ class MainActivity : AppCompatActivity() {
             if (tomorrow.dayOfWeek.value == 6 || tomorrow.dayOfWeek.value == 7) {
                 Snackbar.make(findViewById(R.id.root), "Jutro jest weekend. Nie chodzisz do szkoły w weekend... Racja?", Snackbar.LENGTH_LONG).show()
             } else {
-                val intent = android.content.Intent(this, DisplayActivity::class.java)
-                intent.putExtra("day", day)
-                intent.putExtra("month", month)
-                intent.putExtra("year",year)
+                val url = "https://zastepstwa.zschie.pl/pliki/$day.$month.$year.pdf"
+                // open that in default pdf viewer
+                val intent = android.content.Intent(android.content.Intent.ACTION_VIEW)
+                intent.setDataAndType(android.net.Uri.parse(url), "application/pdf")
+                intent.flags = android.content.Intent.FLAG_ACTIVITY_NO_HISTORY
                 startActivity(intent)
+                if (intent.resolveActivity(packageManager) == null) {
+                    Snackbar.make(findViewById(R.id.root), "Jeśli żądanie zostało odrzucone, oznacza to że na ten dzień serwer nie znalazł zastępstw", Snackbar.LENGTH_LONG).show()
+                }
             }
         }
     }
